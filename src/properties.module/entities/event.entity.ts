@@ -13,6 +13,9 @@ export class Event{
     @ManyToOne(()=>User, user =>user.events)
     user: User;
 
+    @Column({nullable: true})
+    userId: number;
+    
     @OneToMany(()=>Screen, screen=>screen.event,{eager:true})
     @JoinColumn()
     screens:Screen[];

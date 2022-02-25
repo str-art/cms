@@ -13,6 +13,5 @@ export class Content{
     @ManyToOne(()=>User, user =>user.contents)
     user: User;
 
-    @ManyToMany(()=>Playlist, playlist => playlist.contents)
-    playlists: Playlist[];
+    
 }
