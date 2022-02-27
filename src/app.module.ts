@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PropertiesModule } from './properties.module/properties.module';
-
+import { jwtConstants } from './user.module/jwt.constants';
 import { UserModule } from './user.module/user.module';
 
 
@@ -11,6 +12,9 @@ import { UserModule } from './user.module/user.module';
     TypeOrmModule.forRoot(),
     UserModule,
     PropertiesModule,
+    JwtModule.register({secret: jwtConstants.secret}),
+    PassportModule
+    
   ],
   controllers: [],
   providers: [],

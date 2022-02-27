@@ -12,13 +12,18 @@ export class Screen{
     @Column('varchar',{length: 20})
     name: string;
 
-    @ManyToOne(()=>User, user=>user.screens)
+    @Column({nullable:true})
+    userId:number;
+
+    @Column({nullable:true})
+    eventId:number;
+
+    @ManyToOne(()=>User, user=>user.screens,{onDelete:'CASCADE'})
     user: User;
 
-    @ManyToOne(()=>Event,event=>event.screens)
+    @ManyToOne(()=>Event,event=>event.screens,{onDelete:'SET NULL'})
     event: Event
 
-    @OneToOne(()=>Playlist,playlist => playlist.screen)
-    @JoinColumn()
+    @OneToOne(()=>Playlist,playlist => playlist.screen,{cascade:true,onDelete:'SET NULL'})
     playlist: Playlist;
 }

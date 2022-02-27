@@ -1,8 +1,9 @@
 import { Controller, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Crud, CrudAuth, CrudController } from "@nestjsx/crud";
 import { JwtGuard } from "src/guards/jwt.guard";
-import { User } from "src/user.module/user.entity";
 import { CreateEventDto } from "../dto/create.event.dto";
+import { UpdateEventDto } from "../dto/update.event.dto";
 import { Event } from "../entities/event.entity";
 import { EventService } from "../services/event.service";
 
@@ -13,17 +14,25 @@ import { EventService } from "../services/event.service";
     },
     dto:{
         create: CreateEventDto,
-        update: CreateEventDto
+        update: UpdateEventDto
+    },
+    query:{
+        join:{
+            screens:{
+                eager:true
+            }
+        }
     }
 })
 @CrudAuth({
     property: 'user',
-    filter: (event) => ({
-        user: event
+    filter: (user) => ({
+        userId: user.id
     }),
-    persist: (user)=>({user: user.id})
+    persist: (user)=>({userId: user.id})
 })
-
+@ApiTags('Working with events')
+@ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('event')
 export class EventController implements CrudController<Event>{

@@ -13,6 +13,7 @@ import { UserService } from "./user.service";
 
 
 @Module({
+    exports:[UserService],
     imports: [
         TypeOrmModule.forFeature([User]),
         JwtModule.register({secret: jwtConstants.secret})

@@ -10,13 +10,13 @@ export class Event{
     @Column('varchar',{length: 40,nullable:true})
     name: string;
 
-    @ManyToOne(()=>User, user =>user.events)
+    @ManyToOne(()=>User, user =>user.events,{onDelete:'CASCADE'})
     user: User;
 
     @Column({nullable: true})
     userId: number;
     
-    @OneToMany(()=>Screen, screen=>screen.event,{eager:true})
+    @OneToMany(()=>Screen, screen=>screen.event,{onDelete:'SET NULL'})
     @JoinColumn()
     screens:Screen[];
 

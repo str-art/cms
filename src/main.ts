@@ -12,6 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Event CMS')
     .addTag('info')
+    .addBearerAuth()
     .build()
 
   const document = SwaggerModule.createDocument(app,config);
