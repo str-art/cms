@@ -1,39 +1,8 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsNumber, IsObject, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator"
 
-export class ContentPlace{
-    @IsNumber()
-    @IsPositive()
-    @IsNotEmpty()
-    currentOrder: number;
 
-    @IsNumber()
-    @IsPositive()
-    @IsNotEmpty()
-    newOrder: number;
-}
-export class ContentDuration{
-    @IsNumber()
-    @IsPositive()
-    @IsNotEmpty()
-    contentId: number;
-    @IsNumber()
-    @IsPositive()
-    @IsNotEmpty()
-    duration: number;
-}
-export class ContentToAdd{
-    @IsNumber()
-    @IsPositive()
-    @IsNotEmpty()
-    contentId:number;
-    
-    @IsOptional()
-    @IsNumber()
-    @IsPositive()
-    duration?: number;
-    
-}
 
 export class UpdatePlaylistDto{
     @IsOptional()
@@ -62,5 +31,43 @@ export class UpdatePlaylistDto{
     @IsArray()
     @IsNumber({allowNaN:false,},{each:true})
     @IsPositive({each:true})
+    @ApiProperty({description:'Order property of content object you want to delete'})
     contentToDelete?:number[]
+}
+export class ContentPlace{
+    @IsNumber()
+    @IsPositive()
+    @IsNotEmpty()
+    @ApiProperty({description:'Current order property of content object you want to change order'})
+    currentOrder: number;
+
+    @IsNumber()
+    @IsPositive()
+    @IsNotEmpty()
+    @ApiProperty({description:'New order property of content object after switching order (place where you want this object to be'})
+    newOrder: number;
+}
+export class ContentDuration{
+    @IsNumber()
+    @IsPositive()
+    @IsNotEmpty()
+    contentId: number;
+    @IsNumber()
+    @IsPositive()
+    @IsNotEmpty()
+    duration: number;
+}
+export class ContentToAdd{
+    @IsNumber()
+    @IsPositive()
+    @IsNotEmpty()
+    @ApiProperty({description:'Id of content object you want to add. User must have access to it. It will be added to the end of the list by default'})
+    contentId:number;
+    
+    @IsOptional()
+    @IsNumber()
+    @IsPositive()
+    
+    duration?: number;
+    
 }

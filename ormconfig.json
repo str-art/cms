@@ -1,8 +1,8 @@
 {
     "type": "postgres",
     "host": "localhost",
-    "port": 5432,
-    "username": "postgres",
+    "port": 1000,
+    "username": "cms",
     "password":"CMS",
     "database": "cms",
     "entities": ["dist/**/*.entity{.ts,.js}"],

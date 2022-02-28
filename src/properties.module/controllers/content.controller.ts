@@ -15,7 +15,6 @@ import { ContentService } from "../services/content.service";
         create: CreateContentDto,
         update: UpdateContentDto,
     },
-
 })
 @CrudAuth({
     property:'user',

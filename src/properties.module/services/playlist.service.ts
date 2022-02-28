@@ -1,30 +1,14 @@
 import { Injectable, UnprocessableEntityException } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/user.module/user.entity";
 import { Repository } from "typeorm";
-import { CreatePlaylistDto } from "../dto/create.playlist.dto";
+import { CreatePlaylistDto,ContentList,PlaylistModified } from "../dto/create.playlist.dto";
 import { ContentDuration, ContentPlace, ContentToAdd, UpdatePlaylistDto } from "../dto/update.playlist.dto";
 import { Playlist } from "../entities/playlist.entity";
 import { PlaylistToContent } from "../entities/playlistToContent.entity";
 
-export class ContentList{
-    constructor(newName:string,newUrl:string,newDuration:number,newOrder:number){
-        this.name = newName;
-        this.url = newUrl;
-        this.duration = newDuration;
-        this.order = newOrder;
 
-    }
-    name: string;
-    url: string;
-    duration: number;
-    order: number;
-}
-
-export class PlaylistModified{
-    name: string;
-    content: ContentList[]
-}
 
 @Injectable()
 export class PlaylistService{
@@ -65,11 +49,11 @@ export class PlaylistService{
     }
 
     private changeOrder(newOrder:ContentPlace[],existingOrder:PlaylistToContent[]) {
-        console.log(newOrder)
+        
         const sorted = newOrder.sort((a,b)=>{
             return a.newOrder - b.newOrder
         });
-        console.log(newOrder)
+        
         sorted.forEach((content)=>{
             const exists = existingOrder.findIndex((c)=>c.order==content.currentOrder)
             if(exists>=0){
@@ -83,9 +67,9 @@ export class PlaylistService{
                 
             }
         })
-        console.log(existingOrder)
+        
         this.synchOrder(existingOrder);
-        console.log(existingOrder)
+        
         return existingOrder;
     }
     
@@ -119,13 +103,13 @@ export class PlaylistService{
 
     private deleteContent(contentToDelete: number[],contentList:PlaylistToContent[]){
         contentToDelete.forEach((c)=>{
-            console.log('round')
+            
             const exist = contentList.findIndex((content)=>content.order==c)
-            console.log(exist)
+            
             if(exist>=0){
                 this.repo2.delete(contentList[exist].id)
                 contentList.splice(exist,1);
-                console.log(contentList)   
+                 
             }
         })
         this.synchOrder(contentList)

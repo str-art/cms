@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger";
 import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Content } from "./content.entity";
 import { Playlist } from "./playlist.entity";
@@ -19,9 +20,11 @@ export class PlaylistToContent{
     @Column({nullable:true})
     duration: number;
 
+    @ApiHideProperty()
     @ManyToOne(()=>Playlist, playlist=>playlist.playlistToContent,{onDelete:'CASCADE',onUpdate:'CASCADE'})
     playlist: Playlist;
 
+    @ApiHideProperty()
     @ManyToOne(()=>Content,content=>content.playlistToContent,{onDelete:'CASCADE',onUpdate:'CASCADE',cascade:['update'],eager:true})
     content: Content;
 

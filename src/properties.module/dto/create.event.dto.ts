@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger";
 import { IsISO8601, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 
@@ -6,6 +7,7 @@ export class CreateEventDto{
     @IsNotEmpty()
     name: string;
 
+    @ApiHideProperty()
     userId: number;
 
     

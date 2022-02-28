@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger";
 import { User } from "src/user.module/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Screen } from "./screen.entity";
@@ -10,6 +11,7 @@ export class Event{
     @Column('varchar',{length: 40,nullable:true})
     name: string;
 
+    @ApiHideProperty()
     @ManyToOne(()=>User, user =>user.events,{onDelete:'CASCADE'})
     user: User;
 

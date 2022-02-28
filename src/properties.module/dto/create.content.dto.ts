@@ -1,3 +1,4 @@
+import { ApiHideProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateContentDto{
@@ -9,5 +10,6 @@ export class CreateContentDto{
     @IsString()
     url: string;
 
+    @ApiHideProperty()
     userId:number;
 }

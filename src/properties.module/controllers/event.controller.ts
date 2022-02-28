@@ -15,13 +15,6 @@ import { EventService } from "../services/event.service";
     dto:{
         create: CreateEventDto,
         update: UpdateEventDto
-    },
-    query:{
-        join:{
-            screens:{
-                eager:true
-            }
-        }
     }
 })
 @CrudAuth({

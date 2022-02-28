@@ -14,14 +14,7 @@ import { ScreenService } from "../services/screen.service";
     dto:{
         create: CreateScreenDto,
         update: UpdateScreenDto
-    },
-    query:{
-        join:{
-            playlist:{
-                eager:true
-            }
-        }
-    },
+    }
 })
 
 @CrudAuth({
