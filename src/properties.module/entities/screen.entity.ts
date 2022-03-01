@@ -16,7 +16,7 @@ export class Screen{
     
     @Column({nullable:true})
     userId:number;
-
+ev
     
     @Column({nullable:true})
     eventId:number;

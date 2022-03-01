@@ -43,7 +43,7 @@ export class PlaylistService{
         if(dto.duration) playlist.playlistToContent=this.changeDuration(dto.duration,playlist.playlistToContent);
         if(dto.contentToAdd) playlist.playlistToContent.push(...this.addContent(dto.contentToAdd,playlist.playlistToContent.length,user,playlist.id));
         if(dto.contentToDelete) playlist.playlistToContent = this.deleteContent(dto.contentToDelete,playlist.playlistToContent)
-        console.log(playlist);
+        
         await this.repo.save(playlist)
         return await this.findPlaylist(screenId,user)
     }

@@ -15,7 +15,7 @@ export class User{
 
     @ApiProperty({name:'email',description:'User email'})
     @Index()
-    @Column({unique: true, length: 30, nullable: false})
+    @Column({unique: true, nullable: false})
     email: string;
 
     @ApiHideProperty()
