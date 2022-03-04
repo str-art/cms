@@ -16,10 +16,10 @@ import { UserModule } from './user.module/user.module';
   imports: [
     TypeOrmModule.forRoot({
       "type": "postgres",
-      "host": "localhost",
+      "host": process.env.POSTGRES_HOST,
       "port": 5432,
       "username": "postgres",
-      "password":"cms",
+      "password":"CMS",
       "database": "cms",
       "entities": ["dist/**/*.entity{.ts,.js}"],
       "synchronize": true,
