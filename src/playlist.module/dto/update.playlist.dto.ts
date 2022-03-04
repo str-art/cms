@@ -31,7 +31,7 @@ export class UpdatePlaylistDto{
     @IsArray()
     @IsNumber({allowNaN:false,},{each:true})
     @IsPositive({each:true})
-    @ApiProperty({description:'Order property of content object you want to delete'})
+    @ApiProperty({description:'PlaylistToContentId of the content entity you want to delete (id of jointable entity)'})
     contentToDelete?:number[]
 }
 export class ContentPlace{
@@ -39,19 +39,19 @@ export class ContentPlace{
     @IsPositive()
     @IsNotEmpty()
     @ApiProperty({description:'Current order property of content object you want to change order'})
-    currentOrder: number;
+    playlistToContentId: number;
 
     @IsNumber()
     @IsPositive()
     @IsNotEmpty()
-    @ApiProperty({description:'New order property of content object after switching order (place where you want this object to be'})
-    newOrder: number;
+    @ApiProperty({description:'Id of join table entity, after wich you want to put '})
+    goesAfter?: number;
 }
 export class ContentDuration{
     @IsNumber()
     @IsPositive()
     @IsNotEmpty()
-    contentId: number;
+    playlistToContentId: number;
     @IsNumber()
     @IsPositive()
     @IsNotEmpty()
@@ -67,7 +67,11 @@ export class ContentToAdd{
     @IsOptional()
     @IsNumber()
     @IsPositive()
-    
+    @ApiProperty({description:'Id of content object after wich you want to add this one. Must be present in current playlist'})
+    goesAfter?: number;
+
+    @IsOptional()
+    @IsNumber()
+    @IsPositive()
     duration?: number;
-    
 }

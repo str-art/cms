@@ -1,8 +1,8 @@
 import { ApiHideProperty } from "@nestjs/swagger";
 import { User } from "src/user.module/user.entity";
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Playlist } from "./playlist.entity";
-import { PlaylistToContent } from "./playlistToContent.entity";
+import { Playlist } from "../playlist.module/playlist.entity";
+import { PlaylistToContent } from "../playlist.module/playlistToContent.entity";
 
 
 @Entity()

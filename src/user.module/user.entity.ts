@@ -1,10 +1,10 @@
 
 
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Content } from 'src/properties.module/entities/content.entity';
-import { Event } from 'src/properties.module/entities/event.entity';
-import { Playlist } from 'src/properties.module/entities/playlist.entity';
-import { Screen } from 'src/properties.module/entities/screen.entity';
+import { Content } from 'src/content.module/content.entity';
+import { Event } from 'src/event.module/event.entity';
+import { Playlist } from 'src/playlist.module/playlist.entity';
+import { Screen } from 'src/screen.module/screen.entity';
 import { Entity, Column, Index, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm'
 
 @Entity()

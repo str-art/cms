@@ -7,8 +7,9 @@ import { SeedService } from "./seed.service";
 export class SeedController{
     constructor(private seedService: SeedService){}
 
-    @Post()
+    /*@Post()
     async seed(){
         return await this.seedService.SeedDataBase()
     }
+    */
 }

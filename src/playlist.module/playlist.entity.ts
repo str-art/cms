@@ -1,9 +1,9 @@
 import { ApiHideProperty } from "@nestjs/swagger";
 import { User } from "src/user.module/user.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Content } from "./content.entity";
+import { Content } from "../content.module/content.entity";
 import { PlaylistToContent } from "./playlistToContent.entity";
-import { Screen } from "./screen.entity";
+import { Screen } from "../screen.module/screen.entity";
 
 @Entity()
 export class Playlist{
@@ -29,6 +29,6 @@ export class Playlist{
     @JoinColumn()
     screen: Screen;
 
-    @OneToMany(()=>PlaylistToContent,playlistToContent=>playlistToContent.playlist,{onDelete:'SET NULL',cascade:true,eager:true})
+    @OneToMany(()=>PlaylistToContent,playlistToContent=>playlistToContent.playlist,{onDelete:'SET NULL',cascade:true})
     playlistToContent: PlaylistToContent[];
 }

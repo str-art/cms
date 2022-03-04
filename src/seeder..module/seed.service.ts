@@ -1,18 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { PlaylistService } from "src/properties.module/services/playlist.service";
+import { PlaylistService } from "src/playlist.module/playlist.service";
 import { CreateUserDto } from "src/user.module/user.dto/createUser.dto";
 import { UserService } from "src/user.module/user.service";
 import { faker } from "@faker-js/faker"
-import { CreateEventDto } from "src/properties.module/dto/create.event.dto";
+import { CreateEventDto } from "src/event.module/dto/create.event.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Event } from "src/properties.module/entities/event.entity";
-import { CreateScreenDto } from "src/properties.module/dto/create.screen.dto";
-import { Screen } from "src/properties.module/entities/screen.entity";
-import { CreateContentDto } from "src/properties.module/dto/create.content.dto";
-import { Content } from "src/properties.module/entities/content.entity";
-import { CreatePlaylistDto } from "src/properties.module/dto/create.playlist.dto";
-import { ContentToAdd, UpdatePlaylistDto } from "src/properties.module/dto/update.playlist.dto";
+import { Event } from "src/event.module/event.entity";
+import { CreateScreenDto } from "src/screen.module/dto/create.screen.dto";
+import { Screen } from "src/screen.module/screen.entity";
+import { CreateContentDto } from "src/content.module/dto/create.content.dto";
+import { Content } from "src/content.module/content.entity";
+import { CreatePlaylistDto } from "src/playlist.module/dto/create.playlist.dto";
+import { ContentToAdd, UpdatePlaylistDto } from "src/playlist.module/dto/update.playlist.dto";
+import { AuthService } from "src/auth.module/auth.service";
 
 @Injectable()
 export class SeedService{
@@ -21,10 +22,11 @@ export class SeedService{
         @InjectRepository(Content) private contentRepo: Repository<Content>,
         @InjectRepository(Screen) private screenRepo: Repository<Screen>,
         private playlistService: PlaylistService,
+        private authService: AuthService,
         @InjectRepository(Event) private eventRepo: Repository<Event>,
     ){}
 
-    async SeedDataBase(){
+   /* async SeedDataBase(){
         let uDto = new CreateUserDto();
         let eDto = new CreateEventDto();
         let sDto = new CreateScreenDto();
@@ -35,7 +37,7 @@ export class SeedService{
         let y: number;
         for(y=0;y<30;y++){uDto.email = faker.internet.email();
             uDto.password = faker.internet.password();
-            let b = await this.userService.registerUser(uDto);
+            let b = await this.authService.registerUser(uDto);
             let user = await this.userService.getUserById(b.user.id)
             let contentList:ContentToAdd[] = [];
             
@@ -76,7 +78,7 @@ export class SeedService{
                             name: sDto.name
                         }
                     })
-                    let user2 = await this.userService.getUserById(b.user.id)
+                    let user2 = await this.authService.getUserById(b.user.id)
                     pDto.name = faker.word.adjective();
                     pDto.screenId = screen.id;
                     await this.playlistService.createPlaylist(screen.id,pDto,user2)
@@ -86,5 +88,6 @@ export class SeedService{
                 }
             }
         
-        } 
+ 
+        } */
 }
