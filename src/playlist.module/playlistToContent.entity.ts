@@ -1,6 +1,6 @@
 import { ApiHideProperty } from "@nestjs/swagger";
+import { Content } from "src/content.module/content.entity";
 import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Content } from "./content.entity";
 import { Playlist } from "./playlist.entity";
 
 @Entity()

@@ -14,57 +14,20 @@ export class UserService{
         ){}
 
 
-        async validateUser(email: string, pass: string){
-            const user = await this.userRep.createQueryBuilder('User')
-                .addSelect('User.password')
-                .where('email = :toFind',{toFind: email})
-                .getOne()
-            
-            if(user && user.password === pass){
-                const {password, ...validatedUser} = user;
-                return validatedUser;
-            }
-            return null;
-        }
-
-        async registerUser(dto: CreateUserDto){
-            const emailTaken = await this.checkEmail(dto.email);
-            if(emailTaken){throw new HttpException({
-                status: HttpStatus.CONFLICT,
-                error: 'This email is already in use'
-            }, HttpStatus.CONFLICT)}
-            
-            const newUser = await this.createUser(dto)
-            return this.loginUser(newUser)
-        }
-
-        loginUser(user: User){
-            const {password, ...userToLogin} = user;
-            const payload = {sub: userToLogin.id, username: userToLogin.email}
-            return {
-                user: userToLogin,
-                access_token: this.jwtService.sign(payload)
-            }
-        }
+        
 
         async updateUser(dto: UpdateUserDto, user: User){
-            if(dto.email && !this.checkEmail(dto.email)){
-                await this.userRep.createQueryBuilder('User')
-                    .update()
-                    .set({
-                        email: dto.email
-                    })
-                    .where('id = :toFind',{toFind: user.id})
-                    .execute()
-                
+            if(await this.checkEmail(dto.email)){
+                throw new HttpException({
+                    status: HttpStatus.CONFLICT,
+                    error: 'This email is already in use'
+                }, HttpStatus.CONFLICT)
             }
-
             if(dto.password){
-                await this.userRep.createQueryBuilder('User')
-                        .update()
-                        .set({password: dto.password})
-                        .where('id = :toFind', {toFind: user.id})
-                        .execute()      
+                await this.userRep.update(user.id,{password:dto.password})    
+            }
+            if(dto.email){
+                await this.userRep.update(user.id,{email:dto.email})
             }
             return this.loginUser(await this.getUserById(user.id));
         }
@@ -74,25 +37,24 @@ export class UserService{
         }
 
         async getUserById(userId: number){
-            return await this.userRep.createQueryBuilder('user')
-                    .where('user.id = :toFind', {toFind: userId})
-                    .leftJoinAndSelect('user.events','event')
-                    .leftJoinAndSelect('user.screens','screen')
-                    .leftJoinAndSelect('user.playlists','playlist')
-                    .leftJoinAndSelect('user.contents','contents')
-                    .getOne()
+            return await this.userRep.findOne({
+                where:{id:userId},
+            })
         }
 
-        private async createUser(dto: CreateUserDto){
-            const newUser = this.userRep.create(dto);
-            return await this.userRep.save(newUser)
+        private loginUser(user: User){
+            const {password, ...userToLogin} = user;
+            const payload = {sub: userToLogin.id, username: userToLogin.email}
+            return {
+                user: userToLogin,
+                access_token: this.jwtService.sign(payload)
+            }
         }
 
         private async checkEmail(email: string): Promise<Boolean>{
-            const emailTaken = await this.userRep.createQueryBuilder('user')
-                .select('email')
-                .where('email = :emailToFind', {emailToFind: email})
-                .getCount()
+            const emailTaken = await this.userRep.count({
+                where:{email:email}
+            })
 
             if(emailTaken) {return true}
             else {return false}   

@@ -1,9 +1,9 @@
 import { ApiHideProperty } from "@nestjs/swagger";
+import { Screen } from "src/screen.module/screen.entity";
 import { User } from "src/user.module/user.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Content } from "./content.entity";
 import { PlaylistToContent } from "./playlistToContent.entity";
-import { Screen } from "./screen.entity";
+
 
 @Entity()
 export class Playlist{

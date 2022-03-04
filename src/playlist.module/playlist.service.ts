@@ -3,10 +3,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/user.module/user.entity";
 import { Repository } from "typeorm";
-import { CreatePlaylistDto,ContentList,PlaylistModified } from "../dto/create.playlist.dto";
-import { ContentDuration, ContentPlace, ContentToAdd, UpdatePlaylistDto } from "../dto/update.playlist.dto";
-import { Playlist } from "../entities/playlist.entity";
-import { PlaylistToContent } from "../entities/playlistToContent.entity";
+import { ContentList, CreatePlaylistDto, PlaylistModified } from "./dto/create.playlist.dto";
+import { ContentDuration, ContentPlace, ContentToAdd, UpdatePlaylistDto } from "./dto/update.playlist.dto";
+import { Playlist } from "./playlist.entity";
+import { PlaylistToContent } from "./playlistToContent.entity";
 
 
 
@@ -115,7 +115,7 @@ export class PlaylistService{
         this.synchOrder(contentList)
         return contentList;
     }
-
+    //You cant join relations OF relations with repository
     private async getPlaylist(screenId: number,user: User){
         return await this.repo.createQueryBuilder('Playlist')
             .leftJoinAndSelect('Playlist.playlistToContent','playlistToContent')

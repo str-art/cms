@@ -11,4 +11,5 @@ export class SeedController{
     async seed(){
         return await this.seedService.SeedDataBase()
     }
+    
 }
