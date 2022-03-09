@@ -3,8 +3,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Content } from "src/content.module/content.entity";
 import { Event } from "src/event.module/event.entity";
-import { Playlist } from "src/playlist.module/playlist.entity";
-import { PlaylistToContent } from "src/playlist.module/playlistToContent.entity";
+import { PlaylistNode } from "src/playlist.module/playlist.entity";
 import { Screen } from "src/screen.module/screen.entity";
 import { jwtConstants } from "src/user.module/jwt.constants";
 import { User } from "src/user.module/user.entity";
@@ -19,7 +18,7 @@ import { SeedService } from "./seed.service";
 
 @Module({
     imports:[
-        TypeOrmModule.forFeature([User,Event,Screen,Playlist,Content,PlaylistToContent]),
+        TypeOrmModule.forFeature([User,Event,Screen,PlaylistNode,Content]),
         JwtModule.register({secret: jwtConstants.secret}),
         UserModule,
         PlaylistModule,

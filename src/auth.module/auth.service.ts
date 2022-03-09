@@ -15,7 +15,7 @@ export class AuthService{
     async validateUser(email: string, pass: string){
         const user = await this.userRep.findOne({
             where:{email:email},
-            select:['id','email','password','contents','screens','playlists','events']
+            select:['id','email','password','contents','screens','events']
         })
         console.log(user);
         if(user && user.password === pass){
@@ -51,7 +51,6 @@ export class AuthService{
                 leftJoinAndSelect:{
                     event: 'user.events',
                     content:"user.contents",
-                    playlist:"user.playlists",
                     screens:"user.screens"
                     
                 }

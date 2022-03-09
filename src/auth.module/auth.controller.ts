@@ -6,10 +6,10 @@ import { AuthService } from "./auth.service";
 import { LoginGuard } from "./guards/login.guard";
 
 @ApiTags('Authentication')
-@Controller('signup')
+@Controller('auth')
 export class AuthController{
     constructor(private authService: AuthService){}
-    @Post('auth')
+    @Post('signup')
     async registerUser(@Body()dto: CreateUserDto):Promise<ResponseUser>{
         return await this.authService.registerUser(dto)
     }

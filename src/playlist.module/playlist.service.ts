@@ -1,156 +1,69 @@
-import { Injectable, UnprocessableEntityException } from "@nestjs/common";
-import { ApiProperty } from "@nestjs/swagger";
+import {HttpException, HttpStatus, Injectable, Sse} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { iif } from "rxjs";
 import { User } from "src/user.module/user.entity";
 import { Repository } from "typeorm";
-import { ContentList, CreatePlaylistDto, PlaylistModified } from "./dto/create.playlist.dto";
-import { ContentDuration, ContentPlace, ContentToAdd, UpdatePlaylistDto } from "./dto/update.playlist.dto";
-import { Playlist } from "./playlist.entity";
-import { PlaylistToContent } from "./playlistToContent.entity";
-
+import { CreatePlaylistNodeDto } from "./dto/create.playlistNode.dto";
+import { DeleteOptions } from "./dto/delete.options";
+import { UpdatePlaylistNodeDto } from "./dto/update.playlistNode.dto";
+import { PlaylistNode } from "./playlist.entity";
 
 
 @Injectable()
 export class PlaylistService{
-    constructor(
-        @InjectRepository(Playlist)private repo:Repository<Playlist>,
-        @InjectRepository(PlaylistToContent)private repo2:Repository<PlaylistToContent>
-        ){}
+   constructor(@InjectRepository(PlaylistNode)private repo:Repository<PlaylistNode>){}
 
-    async createPlaylist(screenId: number,dto: CreatePlaylistDto,user: User){
-        await this.deletePlaylist(screenId);
-        dto.userId = user.id;
+    async createNode(screenId:number, user:User, dto:CreatePlaylistNodeDto){
         dto.screenId = screenId;
-        const playlist = this.repo.create(dto);
-        return this.modifyPlaylist(await this.repo.save(playlist));
+        const newNode = this.repo.create(dto);
+        await this.repo.insert(newNode);
+        return await this.getPlaylist(screenId)
     }
 
-    async findPlaylist(screenId:number, user: User){
-        const playlistUnMod = await this.getPlaylist(screenId,user);
-        return this.modifyPlaylist(playlistUnMod)
-    }
-    
-    async deletePlaylist(screenId: number){
-        return await this.repo.delete({screenId:screenId})
-    }
-
-    async changePlaylist(screenId: number, dto: UpdatePlaylistDto, user: User){
-        console.log(dto);
-        const playlist = await this.getPlaylist(screenId,user);
-        if(!playlist)throw new UnprocessableEntityException('Playlist doesnt exist','Create a playlist first')
-        if(dto.name) playlist.name = dto.name;
-        if(dto.order) playlist.playlistToContent=this.changeOrder(dto.order,playlist.playlistToContent);
-        if(dto.duration) playlist.playlistToContent=this.changeDuration(dto.duration,playlist.playlistToContent);
-        if(dto.contentToAdd) playlist.playlistToContent.push(...this.addContent(dto.contentToAdd,playlist.playlistToContent.length,user,playlist.id));
-        if(dto.contentToDelete) playlist.playlistToContent = this.deleteContent(dto.contentToDelete,playlist.playlistToContent)
+    async getPlaylist(screenId:number){
         
-        await this.repo.save(playlist)
-        return await this.findPlaylist(screenId,user)
-    }
-
-    private changeOrder(newOrder:ContentPlace[],existingOrder:PlaylistToContent[]) {
-        
-        const sorted = newOrder.sort((a,b)=>{
-            return a.newOrder - b.newOrder
-        });
-        
-        sorted.forEach((content)=>{
-            const exists = existingOrder.findIndex((c)=>c.order==content.currentOrder)
-            if(exists>=0){
-                let temp = existingOrder[content.newOrder-1]
-                existingOrder[content.newOrder-1]=existingOrder[exists]
-                existingOrder[exists]=temp;
-                // let i: number;
-                // for(i=content.newOrder;i<existingOrder.length;i++){
-                //     if(i!=exists){existingOrder[i].order++;}
-                // }
-                
+        return await this.repo.find({
+            where:{
+                screenId:screenId
+            },
+            relations:['content'],
+            order:{
+                order:'ASC'
             }
         })
-        
-        this.synchOrder(existingOrder);
-        
-        return existingOrder;
-    }
-    
-    private changeDuration(newDuration: ContentDuration[],existingDuration:PlaylistToContent[]){
-        newDuration.forEach((i)=>{
-            const exists = existingDuration.findIndex((c)=>c.contentId==i.contentId)
-            if(exists>=0)existingDuration[exists].duration=i.duration;
-        })
-        return existingDuration;
     }
 
-    private addContent(newContent: ContentToAdd[], length: number, user: User, playlistId:number){
-        const arr: PlaylistToContent[] = [];
-        let l: number;
-        if(length == 0){l = 1}else{l = length}
-        newContent.forEach((contToAdd)=>{
-                const exists = user.contents.find((c)=>c.id==contToAdd.contentId)
-            if(exists){
-                const contentToAdd = new PlaylistToContent();
-                contentToAdd.contentId = contToAdd.contentId;
-                contentToAdd.playlistId = playlistId;
-                contentToAdd.order = l;
-                l++;
-                if(contToAdd.duration) contentToAdd.duration = contToAdd.duration;
-                
-                arr.push(contentToAdd)
+    async changePlaylist(screenId:number,user:User,dto:UpdatePlaylistNodeDto){
+        
+        const node = await this.repo.findOne({
+            where:{
+                id:dto.id,
+                screenId:screenId
             }
         })
-        return arr;
+        if(dto.order)node.order = dto.order;
+        if(dto.duration)node.duration = dto.duration;
+        await this.repo.save(node);
+        return await this.getPlaylist(screenId)
     }
 
-    private deleteContent(contentToDelete: number[],contentList:PlaylistToContent[]){
-        contentToDelete.forEach((c)=>{
-            
-            const exist = contentList.findIndex((content)=>content.order==c)
-            
-            if(exist>=0){
-                this.repo2.delete(contentList[exist].id)
-                contentList.splice(exist,1);
-                 
-            }
-        })
-        this.synchOrder(contentList)
-        return contentList;
-    }
-    //You cant join relations OF relations with repository
-    private async getPlaylist(screenId: number,user: User){
-        return await this.repo.createQueryBuilder('Playlist')
-            .leftJoinAndSelect('Playlist.playlistToContent','playlistToContent')
-            .leftJoinAndSelect('playlistToContent.content','content')
-            .where('Playlist.screenId = :screenId',{screenId})
-            .andWhere('Playlist.userId = :toFind',{toFind:user.id})
-            .orderBy('playlistToContent.order','ASC')
-            .getOne()
-    }
-
-    private modifyPlaylist(playlist: Playlist){
-        const playlistMod = new PlaylistModified()
-        playlistMod.name = playlist.name;
-        
-        if(playlist.playlistToContent){
-            let arr = [];
-            playlist.playlistToContent.forEach((ptc)=>{
-            let i = new ContentList(ptc.content.name,ptc.content.url,ptc.duration,ptc.order)
-            arr.push(i);  
-        })
-        playlistMod.content = arr;}
-        
-        return playlistMod;
-    }
-
-    private synchOrder(contentList: PlaylistToContent[]){
-        let i: number;
-        contentList[0].order = 1;
-        for(i=0;i<contentList.length-1;i++){
-            let correctOrder = contentList[i+1].order-contentList[i].order;
-            if(correctOrder!=1){
-                contentList[i+1].order = contentList[i].order+1;
-            }
+    async deletePlaylist(screenId:number,user:User,dto:DeleteOptions){
+        if(dto.delete === true){
+            await this.repo.delete({
+                screenId:screenId
+            })
         }
+        if(typeof dto.delete === 'number'){
+            const entityToDelete = await this.repo.findOne({
+                where:{
+                    id:dto.delete,
+                    screenId:screenId
+                }
+            })
+            if(entityToDelete){await this.repo.remove(entityToDelete);}
+            
+        }
+        return await this.getPlaylist(screenId)
     }
 
-    
 }

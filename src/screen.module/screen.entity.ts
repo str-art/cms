@@ -3,7 +3,7 @@ import { ApiHideProperty } from "@nestjs/swagger";
 import { User } from "src/user.module/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "../event.module/event.entity";
-import { Playlist } from "../playlist.module/playlist.entity";
+import {PlaylistNode } from "../playlist.module/playlist.entity";
 
 @Entity()
 export class Screen{
@@ -13,10 +13,8 @@ export class Screen{
     @Column('varchar',{length: 20})
     name: string;
 
-    
     @Column({nullable:true})
     userId:number;
-ev
     
     @Column({nullable:true})
     eventId:number;
@@ -30,6 +28,6 @@ ev
     event: Event
 
     @ApiHideProperty()
-    @OneToOne(()=>Playlist,playlist => playlist.screen,{cascade:true,onDelete:'SET NULL'})
-    playlist: Playlist;
+    @OneToOne(()=>PlaylistNode,playlist => playlist.screen,{cascade:true,onDelete:'SET NULL'})
+    playlist: PlaylistNode[];
 }

@@ -2,14 +2,14 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "src/auth.module/auth.module";
 import { PlaylistController } from "./playlist.controller";
-import { Playlist } from "./playlist.entity";
+import { PlaylistNode } from "./playlist.entity";
 import { PlaylistService } from "./playlist.service";
-import { PlaylistToContent } from "./playlistToContent.entity";
+
 
 @Module({
     exports:[PlaylistService],
     imports:[
-        TypeOrmModule.forFeature([Playlist,PlaylistToContent]),
+        TypeOrmModule.forFeature([PlaylistNode]),
         AuthModule
     ],
     controllers:[PlaylistController],

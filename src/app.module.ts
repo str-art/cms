@@ -23,7 +23,8 @@ import { UserModule } from './user.module/user.module';
       "database": "cms",
       "entities": ["dist/**/*.entity{.ts,.js}"],
       "synchronize": true,
-      "logging": "all"
+      "logging": "all",
+      "subscribers": ["dist/**/*.subscriber{.ts,.js}"]
     }),
     JwtModule.register({secret: jwtConstants.secret}),
     AuthModule,
@@ -32,7 +33,7 @@ import { UserModule } from './user.module/user.module';
     ContentModule,
     EventModule,
     PlaylistModule,
-    Seeder,
+    Seeder
   ],
   controllers: [],
   providers: [],
