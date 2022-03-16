@@ -33,33 +33,32 @@ export class SeedService{
             let uDto = new CreateUserDto();
             uDto.email = faker.internet.email();
             uDto.password = faker.internet.password()
-            const registredUser = await this.authService.registerUser(uDto);
+            const registredUser = await this.authService.getUser(uDto.email);
             let i:number;
             for(i=0;i<4;i++){
                 let eDto = new CreateEventDto();
                 eDto.name = faker.word.noun();
-                eDto.userId = registredUser.user.id;
+                eDto.userId = registredUser.id;
                 let eventEntity = this.eventRepo.create(eDto);
                 const event = await this.eventRepo.save(eventEntity);
                 let k:number;
                 for(k=0;k<4;k++){
                     let sDto = new CreateScreenDto();
                     sDto.eventId = event.id;
-                    sDto.userId = registredUser.user.id;
+                    sDto.userId = registredUser.id;
                     sDto.name = faker.word.adjective();
                     const newScreen = this.screenRepo.create(sDto);
                     const screen = await this.screenRepo.save(newScreen);
                     let j:number;
                     for(j=0;j<4;j++){
                         let cDto = new CreateContentDto();
-                        cDto.url = faker.internet.url();
-                        cDto.userId = registredUser.user.id;
+                        cDto.userId = registredUser.id;
                         cDto.name = faker.word.adverb();
                         const newContent = this.contentRepo.create(cDto);
                         const content = await this.contentRepo.save(newContent);
                         let PlaylistNode = new CreatePlaylistNodeDto();
                         PlaylistNode.contentId = content.id;
-                        await this.playlistService.createNode(screen.id,registredUser.user,PlaylistNode)
+                        await this.playlistService.createNode(screen.id,registredUser,PlaylistNode)
                     }
                 }
             }

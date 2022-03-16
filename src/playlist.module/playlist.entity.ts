@@ -21,7 +21,6 @@ export class PlaylistNode{
     @ManyToOne(()=>Content,content=>content.playlistNode,{onDelete:'CASCADE',orphanedRowAction:'delete',eager:true})
     content: Content;
 
-    
     @Column()
     contentId: number;
 

@@ -13,4 +13,18 @@ export class CreateScreenDto{
     @IsNumber()
     @IsPositive()
     eventId?: number;
+
+    @IsNotEmpty()
+    @IsNumber({
+        allowNaN: false
+    })
+    @IsPositive()
+    width: number;
+
+    @IsNotEmpty()
+    @IsNumber({
+        allowNaN: false
+    })
+    @IsPositive()
+    height: number;
 }

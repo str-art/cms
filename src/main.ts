@@ -2,6 +2,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { auth, ConfigParams } from 'express-openid-connect'
+import { configAuth0 } from './auth0config';
+
 
 const PORT = process.env.port || 3000;
 
@@ -10,7 +13,7 @@ const PORT = process.env.port || 3000;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe())
-
+  app.use(auth(configAuth0))
   const config = new DocumentBuilder()
     .setTitle('Event CMS')
     .addTag('info')

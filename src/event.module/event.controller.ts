@@ -1,11 +1,11 @@
 import { Controller, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Crud, CrudAuth, CrudController } from "@nestjsx/crud";
-import { JwtGuard } from "src/auth.module/guards/jwt.guard";
-import { CreateEventDto } from "../event.module/dto/create.event.dto";
-import { UpdateEventDto } from "../event.module/dto/update.event.dto";
-import { Event } from "../event.module/event.entity";
-import { EventService } from "../event.module/event.service";
+import { AuthGuard } from "src/auth.module/guards/auth.guard";
+import { CreateEventDto } from "./dto/create.event.dto";
+import { UpdateEventDto } from "./dto/update.event.dto";
+import { Event } from "./event.entity";
+import { EventService } from "./event.service";
 
 
 @Crud({
@@ -25,8 +25,8 @@ import { EventService } from "../event.module/event.service";
     persist: (user)=>({userId: user.id})
 })
 @ApiTags('Working with events')
+@UseGuards(AuthGuard)
 @ApiBearerAuth()
-@UseGuards(JwtGuard)
 @Controller('event')
 export class EventController implements CrudController<Event>{
     constructor(public service: EventService){}

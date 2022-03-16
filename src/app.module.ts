@@ -10,30 +10,20 @@ import { Seeder } from './seeder..module/seeder.module';
 
 import { jwtConstants } from './user.module/jwt.constants';
 import { UserModule } from './user.module/user.module';
+import { StorageModule } from './storage/storage.module';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      "type": "postgres",
-      "host": process.env.POSTGRES_HOST,
-      "port": 5432,
-      "username": "postgres",
-      "password":"CMS",
-      "database": "cms",
-      "entities": ["dist/**/*.entity{.ts,.js}"],
-      "synchronize": true,
-      "logging": "all",
-      "subscribers": ["dist/**/*.subscriber{.ts,.js}"]
-    }),
-    JwtModule.register({secret: jwtConstants.secret}),
+    TypeOrmModule.forRoot(),
     AuthModule,
     UserModule,
     ScreenModule,
     ContentModule,
     EventModule,
     PlaylistModule,
-    Seeder
+    Seeder,
+    StorageModule
   ],
   controllers: [],
   providers: [],

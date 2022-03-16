@@ -9,59 +9,24 @@ import { Repository } from "typeorm";
 export class AuthService{
     constructor(
         @InjectRepository(User)private userRep: Repository<User>,
-        private jwtService: JwtService
         ){}
 
-    async validateUser(email: string, pass: string){
-        const user = await this.userRep.findOne({
-            where:{email:email},
-            select:['id','email','password','contents','screens','events']
-        })
-        console.log(user);
-        if(user && user.password === pass){
-            const {password, ...validatedUser} = user;
-            return validatedUser;
-        }
-        return null;
-    }
+   async getUser(user):Promise<User>{
+        const existingUser = await this.getUserByEmail(user.email);
+        if(existingUser){return existingUser}
+        const newUser = this.userRep.create({email:user.email})
+        await this.userRep.save(newUser);
 
-    async registerUser(dto: CreateUserDto){
-        const emailTaken = await this.userRep.count({where:{email:dto.email}});
-        if(emailTaken!=0){throw new HttpException({
-            status: HttpStatus.CONFLICT,
-            error: 'This email is already in use'
-        }, HttpStatus.CONFLICT)}
-        
-        const newUser = await this.createUser(dto)
-        return this.loginUser(newUser)
-    }
+        return await this.getUserByEmail(newUser.email)
+   }
 
-    loginUser(user: User){
-        const {password, ...userToLogin} = user;
-        const payload = {sub: userToLogin.id, username: userToLogin.email}
-        return {
-            user: userToLogin,
-            access_token: this.jwtService.sign(payload)
-        }
-    }
-    async getUserById(userId: number){
-        return await this.userRep.findOne({
-            join:{
-                alias: "user",
-                leftJoinAndSelect:{
-                    event: 'user.events',
-                    content:"user.contents",
-                    screens:"user.screens"
-                    
-                }
-            },
-            where:{id:userId},
-            
-        })
-    }
-
-    private async createUser(dto: CreateUserDto){
-        const newUser = this.userRep.create(dto);
-        return await this.userRep.save(newUser)
-    }
+   async getUserByEmail(email:string){
+       return await this.userRep.findOne({
+           relations:['events','screens','contents'],
+           where:{
+               email:email
+           }
+       }
+       )
+   }
 }

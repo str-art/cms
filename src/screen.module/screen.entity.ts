@@ -30,4 +30,10 @@ export class Screen{
     @ApiHideProperty()
     @OneToOne(()=>PlaylistNode,playlist => playlist.screen,{cascade:true,onDelete:'SET NULL'})
     playlist: PlaylistNode[];
+
+    @Column({default: 1080,nullable:false})
+    width:number;
+
+    @Column({default: 1920, nullable: false})
+    height: number;
 }

@@ -10,7 +10,7 @@ export class Content{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('varchar',{length: 150})
+    @Column('varchar',{length: 150,nullable:true})
     url: string;
 
     @Column({nullable:true})

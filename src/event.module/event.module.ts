@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { requiresAuth } from "express-openid-connect";
 import { AuthModule } from "src/auth.module/auth.module";
-import { EventController } from "src/content.module/event.controller";
+import { EventController } from "src/event.module/event.controller";
 import { Event } from "./event.entity";
 import { EventService } from "./event.service";
 
@@ -13,6 +14,9 @@ import { EventService } from "./event.service";
     controllers:[EventController],
     providers:[EventService]
 })
-export class EventModule{
+export class EventModule implements NestModule{
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(requiresAuth()).forRoutes(EventController)
+    }
 
 }

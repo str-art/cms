@@ -18,7 +18,7 @@ export class User{
     email: string;
 
     @ApiHideProperty()
-    @Column({select: false, nullable: false})
+    @Column({select: false,nullable:true})
     password?: string;
 
     @OneToMany(()=>Event, event=>event.user,{cascade:['remove'],onDelete:'SET NULL'})
