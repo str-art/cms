@@ -7,7 +7,6 @@ export class AuthController{
 
     @Get()
     async proceed(@Request()req ){
-        console.log(req)
         return await this.authServce.getUser(req.oidc.user)
     }
 }

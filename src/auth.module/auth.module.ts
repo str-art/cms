@@ -1,8 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { requiresAuth } from "express-openid-connect";
-import { jwtConstants } from "src/user.module/jwt.constants";
 import { User } from "src/user.module/user.entity";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
@@ -11,8 +9,7 @@ import { AuthService } from "./auth.service";
 @Module({
     exports:[AuthService],
     imports:[
-        TypeOrmModule.forFeature([User]),
-        JwtModule.register({secret: jwtConstants.secret})
+        TypeOrmModule.forFeature([User])
         
     ],
     controllers:[AuthController],
@@ -21,4 +18,8 @@ import { AuthService } from "./auth.service";
         
     ]
 })
-export class AuthModule{}
+export class AuthModule implements NestModule{
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(requiresAuth()).forRoutes(AuthController)
+    }
+}

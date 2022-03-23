@@ -19,7 +19,6 @@ export class PlaylistController{
     
     @Get()
     async getPlaylist(@Param('screenId')screenId: number, @Request()req ){
-        console.log(req)
         return await this.service.getPlaylist(screenId);
     }
 

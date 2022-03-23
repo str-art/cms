@@ -1,9 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateUserDto } from "src/user.module/user.dto/createUser.dto";
 import { User } from "src/user.module/user.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 
 @Injectable()
 export class AuthService{
@@ -12,19 +10,23 @@ export class AuthService{
         ){}
 
    async getUser(user):Promise<User>{
-        const existingUser = await this.getUserByEmail(user.email);
-        if(existingUser){return existingUser}
-        const newUser = this.userRep.create({email:user.email})
-        await this.userRep.save(newUser);
+        const exist = await this.getUserByEmail(user);
+        if(exist){
+            return exist
+        }else{
+            const newUser = new User();
+            newUser.email = user.email? user.email:user.nickname
+            const created = await this.userRep.save(newUser)
+            return created;
+        }
 
-        return await this.getUserByEmail(newUser.email)
    }
 
-   async getUserByEmail(email:string){
+   async getUserByEmail(user){
        return await this.userRep.findOne({
            relations:['events','screens','contents'],
            where:{
-               email:email
+               email:In([user.email,user.nickname])
            }
        }
        )

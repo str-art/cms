@@ -1,5 +1,6 @@
 import { ApiHideProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { ScreenOrientation } from "src/screen.module/screen.entity";
 
 export class CreateContentDto{
     @IsOptional()
@@ -10,16 +11,16 @@ export class CreateContentDto{
     userId:number;
 
     @IsNotEmpty()
-    @IsNumber({
-        allowNaN: false
-    })
-    @IsPositive()
     width: number;
 
     @IsNotEmpty()
-    @IsNumber({
-        allowNaN: false
-    })
-    @IsPositive()
     height: number;
+
+    @ApiHideProperty()
+    contentType:string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsIn(['portrait','landscape'],{message:'Invalide orientation'})
+    orientation: ScreenOrientation
 }

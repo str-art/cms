@@ -6,7 +6,7 @@ module.exports = {
     "password":"CMS",
     "database": "cms",
     "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true,
+    "synchronize": false,
     "logging": "all",
     "subscribers": ["dist/**/*.subscriber{.ts,.js}"],
     "migrations": ["dist/migration/*.js"],

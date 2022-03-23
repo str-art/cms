@@ -5,7 +5,7 @@ export const configAuth0:ConfigParams = {
     auth0Logout: true,
     secret: 'a long, randomly-generated string stored in env',
     baseURL: 'http://localhost:3000',
-    clientID: 'ouPlVcxklUGtjOzr1Vp3dAfzSdqbKp92',
-    issuerBaseURL: 'https://dev-djgb53nn.us.auth0.com',
+    clientID: 'uFyoCCgNJ26sDlGXyQfYaHX8oOoGu9E3',
+    issuerBaseURL: 'https://dev-hxr92yst.us.auth0.com/',
   };
   

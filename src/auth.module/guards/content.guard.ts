@@ -1,6 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Request } from "express";
-import { Observable } from "rxjs";
 
 @Injectable()
 export class ContentGuard implements CanActivate{
@@ -11,6 +9,10 @@ export class ContentGuard implements CanActivate{
         if(dto.contentId){
             const allow = content.contents.find((c)=>c.id==dto.contentId)
         if(!allow)return false
+        }
+        if(req.params.contentId){
+            const allow = content.contents.find((c)=>c.id==req.params.contentId)
+            if(!allow)return false
         }
         return true;
     }

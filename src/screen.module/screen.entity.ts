@@ -5,6 +5,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn
 import { Event } from "../event.module/event.entity";
 import {PlaylistNode } from "../playlist.module/playlist.entity";
 
+export type ScreenOrientation = 'portrait'|'landscape'
+
 @Entity()
 export class Screen{
     @PrimaryGeneratedColumn()
@@ -36,4 +38,11 @@ export class Screen{
 
     @Column({default: 1920, nullable: false})
     height: number;
+
+    @Column({
+        type:'enum',
+        enum:['portrait','landscape'],
+        default:'portrait'
+    })
+    orientation: ScreenOrientation
 }

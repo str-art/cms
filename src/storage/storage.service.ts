@@ -23,6 +23,19 @@ export class StorageService{
         }
         
     }
+
+    async download(key){
+        const params = {
+            Bucket: 'cmsapipurrwebintern',
+            Key: key
+        }
+        try{
+            const result = await this.cloud.send(new GetObjectCommand(params))
+            return result
+        } catch(err){
+            console.log(err)
+        }
+    }
     
     async deleteFile(key){
         const params = {
