@@ -1,6 +1,5 @@
-import {HttpException, HttpStatus, Injectable, Sse} from "@nestjs/common";
+import {Injectable} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { iif } from "rxjs";
 import { User } from "src/user.module/user.entity";
 import { Repository } from "typeorm";
 import { CreatePlaylistNodeDto } from "./dto/create.playlistNode.dto";

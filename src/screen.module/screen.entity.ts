@@ -1,7 +1,7 @@
 
 import { ApiHideProperty } from "@nestjs/swagger";
 import { User } from "src/user.module/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "../event.module/event.entity";
 import {PlaylistNode } from "../playlist.module/playlist.entity";
 

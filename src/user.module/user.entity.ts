@@ -1,5 +1,3 @@
-
-
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Content } from 'src/content.module/content.entity';
 import { Event } from 'src/event.module/event.entity';

@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjsx/crud/lib/crud";
-import { Type } from "class-transformer";
-import { IsBoolean, IsNotEmpty } from "class-validator";
+import {  IsNotEmpty } from "class-validator";
 import { isIntOrBoolean } from "../int.or.boolean.decorator";
 
 export class DeleteOptions{

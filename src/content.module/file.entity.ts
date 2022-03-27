@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Content } from "./content.entity";
 import { ScreenOrientation } from "src/screen.module/screen.entity";
 

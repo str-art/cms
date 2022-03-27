@@ -1,6 +1,4 @@
-import { File } from "src/content.module/file.entity";
-import { Screen } from "src/screen.module/screen.entity";
-import { Between, EntitySubscriberInterface, EventSubscriber, InsertEvent, LessThanOrEqual, LoadEvent, MoreThan, Not, RemoveEvent, UpdateEvent } from "typeorm";
+import { Between, EntitySubscriberInterface, EventSubscriber, InsertEvent, LoadEvent, MoreThan, Not, RemoveEvent, UpdateEvent } from "typeorm";
 import { PlaylistNode } from "./playlist.entity";
 
 @EventSubscriber()

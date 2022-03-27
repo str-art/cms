@@ -1,14 +1,10 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Request, Response, StreamableFile, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Crud, CrudAuth, CrudController } from "@nestjsx/crud";
-import { Content } from "./content.entity";
 import { ContentService } from "./content.service";
 import { AuthGuard } from "src/auth.module/guards/auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateContentDto } from "./dto/create.content.dto";
-import { createReadStream } from "fs";
 import { ContentGuard } from "src/auth.module/guards/content.guard";
-import { GetObjectCommandOutput, GetObjectOutput } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 
 

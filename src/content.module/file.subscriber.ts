@@ -1,6 +1,6 @@
-import { DeleteObjectCommand, GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand,S3Client } from "@aws-sdk/client-s3";
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { AfterInsert, AfterLoad, BeforeInsert, BeforeRemove, Entity, EntitySubscriberInterface, EventSubscriber, InsertEvent, Like, LoadEvent, RemoveEvent } from "typeorm";
+import { AfterInsert,  BeforeInsert, BeforeRemove,  EntitySubscriberInterface, EventSubscriber, InsertEvent, Like,  RemoveEvent } from "typeorm";
 import { File } from "./file.entity";
 
 @EventSubscriber()

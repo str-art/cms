@@ -1,8 +1,6 @@
-import { Body, Controller, Delete, Get, Patch, Post, Request, UseGuards, UseInterceptors } from "@nestjs/common";
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { requiresAuth } from "express-openid-connect";
+import {Controller, Delete, Get,  Request, UseGuards} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/auth.module/guards/auth.guard";
-import { ResponseUser, UpdateUserDto } from "./user.dto/update.user.dto";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 

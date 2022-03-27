@@ -1,7 +1,7 @@
 import { ApiHideProperty } from "@nestjs/swagger";
 import { PlaylistNode } from "src/playlist.module/playlist.entity";
 import { User } from "src/user.module/user.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { File } from "./file.entity";
 
 export enum FileType{
