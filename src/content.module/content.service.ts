@@ -30,7 +30,7 @@ export class ContentService{
             orientation:dto.orientation
         })
         await this.storage.uploadFile(file.buffer,newContent.id,newFile.id);
-        return await this.repo.findOne(newContent.id)
+        return await this.getOneContent(user,newContent.id)
     }
 
     async getContent(user:User){

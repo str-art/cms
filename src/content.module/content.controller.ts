@@ -25,7 +25,7 @@ export class ContentController{
             'file',
             {
                 fileFilter: (req,file,cb)=>{
-                if(file && file.mimetype == 'text/html' || 'image/jpeg' || "image/png" || 'video/mp4' ){
+                if(file && (file.mimetype.includes('video')|| file.mimetype.includes('image')||file.mimetype.includes('html'))){
                     cb(null,true)
                 }else{
                     cb(new HttpException({
@@ -64,7 +64,7 @@ export class ContentController{
     @UseInterceptors(
         FileInterceptor('file',{
             fileFilter: (req,file,cb)=>{
-                if(file.mimetype == 'text/html' || 'image/jpeg' || "image/png" || 'video/mp4' ){
+                if(file && (file.mimetype.includes('video')|| file.mimetype.includes('image')||file.mimetype.includes('html'))){
                     cb(null,true)
                 }else{
                     cb(new HttpException({

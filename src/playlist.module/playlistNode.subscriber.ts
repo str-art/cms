@@ -63,67 +63,39 @@ export class PlaylistNodeSubscriber implements EntitySubscriberInterface<Playlis
     }
 
     async afterLoad(entity: PlaylistNode, event?: LoadEvent<PlaylistNode>){
-        const screenRepo = event.manager.getRepository(Screen)
-        const fileRepo = event.manager.getRepository(File)
+        const querryRunner = event.queryRunner
+        const result = await querryRunner.query(`
+        SELECT 
+        f.id,
+        f.width,
+        f.height,
+        f.orientation,
+        f.key,
+        f."contentId",
+        f."contentType",
+        CASE 
+        WHEN (s.width - f.width) < 0 THEN (s.width - f.width) * -1
+        WHEN (s.width - f.width) >= 0 THEN (s.width - f.width)
+        END AS "widthDiff",
+        CASE 
+        WHEN (s.height - f.height) < 0 THEN (s.height - f.height) * -1
+        WHEN (s.height - f.height) >= 0 THEN (s.height - f.height)
+        END AS "heightDiff",
+        CASE 
+        WHEN (CAST(s.orientation AS VARCHAR) = CAST(f.orientation AS VARCHAR)) THEN 1
+        ELSE 0
+        END AS "sameOrient"
+        FROM screen AS "s"
+        CROSS JOIN file AS "f"
+        WHERE s.id = ${entity.screenId}
+        AND f."contentId" = ${entity.contentId}
+        ORDER BY "sameOrient" DESC,"widthDiff" ASC, "heightDiff" ASC
+        FETCH FIRST 1 ROWS ONLY;
+        `)
         entity.content.files = [];
-        const {width,height,orientation} = await screenRepo.findOne({id:entity.screenId})
-        const file = await fileRepo.find({
-            where:{
-                contentId: entity.contentId
-            }
-        })
-        const easiest = file.find((f)=>{
-            return f.width == width && f.height == height && f.orientation == orientation
-        })
-        if(easiest){
-            entity.content.files.push(easiest)
-            }else{
-            if(file.length == 1){
-                entity.content.files.push(file[0])
-            }
-            
-            else{
-                const sameOrient = file.filter((f)=>f.orientation==orientation)
-                if(sameOrient.length==1){
-                    entity.content.files.push(sameOrient[0])
-                }
-                if(sameOrient.length>1){
-                    if(width>height){const sameRatio = sameOrient.filter((f)=>f.width>f.height)
-                        if(sameRatio.length==0){
-                            entity.content.files.push(sameOrient[0])
-                        }else{
-                            entity.content.files.push(sameRatio[0])
-                        }
-                    }else{
-                        const sameRatio = sameOrient.filter((f)=>f.width<f.height)
-                        if(sameRatio.length==0){
-                            entity.content.files.push(sameOrient[0])
-                        }else{
-                            entity.content.files.push(sameRatio[0])
-                        }
-                    }
-                }
-                if(sameOrient.length==0){
-                    if(width>height){
-                        const sameRatio = file.filter((f)=>f.width>f.height)
-                        if(sameRatio.length==0){
-                            entity.content.files.push(file[0])
-                        }else{
-                            entity.content.files.push(file[0])
-                        }
-                    }else{
-                        const sameRatio = file.filter((f)=>f.width<f.height)
-                        if(sameRatio.length==0){
-                            entity.content.files.push(file[0])
-                        }else{
-                            entity.content.files.push(file[0])
-                        }
-                    }
-                }
-            }
-        }
-        
-        
+        const {heightDiff,widthDiff,sameOrient,...file} = result[0]
+        entity.content.files.push(file)
+       
     }
     
 
