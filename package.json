@@ -36,6 +36,7 @@
     "aws-sdk": "^2.1092.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-oauth2-jwt-bearer": "^1.1.0",
     "express-openid-connect": "^2.7.1",

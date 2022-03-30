@@ -6,8 +6,20 @@ export class AuthGuard implements CanActivate{
     constructor(private authService:AuthService){}
     async canActivate(context: ExecutionContext){
         const req = context.switchToHttp().getRequest();
-        if(req.user){return true}
-        req.user = await this.authService.getUser(req.oidc.user)
-        return true
+        if(req.user){
+            return true
+        }
+
+        if(req.oidc.user){
+            try{
+                req.user = await this.authService.getUser(req.oidc.user);
+            }
+            catch (err){
+                return false
+            }
+            return true;
+        }
+        
+        return false
     }
 }

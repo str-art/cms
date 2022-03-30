@@ -1,5 +1,6 @@
 
-import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsIn, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { ScreenOrientation } from "../screen.entity";
 
 export class UpdateScreenDto{
     @IsOptional()
@@ -24,4 +25,9 @@ export class UpdateScreenDto{
     })
     @IsPositive()
     height?: number;
+
+    @IsOptional()
+    @IsString()
+    @IsIn(['portrait','landscape'])
+    orientation: ScreenOrientation
 }

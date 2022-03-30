@@ -6,6 +6,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateContentDto } from "./dto/create.content.dto";
 import { ContentGuard } from "src/auth.module/guards/content.guard";
 import { Readable } from "stream";
+import { User } from "src/user.module/user.entity";
+import { GetUser } from "src/decorators/user.decorator";
 
 
 @ApiTags('Working with content base')
@@ -32,20 +34,20 @@ export class ContentController{
             }
         )
     )
-    addContent(@UploadedFile()file: Express.Multer.File, @Request() req, @Body() dto: CreateContentDto){
-        return this.service.createContent(file,req.user, dto)
+    addContent(@UploadedFile()file: Express.Multer.File, @GetUser() user: User, @Body() dto: CreateContentDto){
+        return this.service.createContent(file,user, dto)
         
     }
 
     @Get()
-    getContent( @Request() req){
-            return this.service.getContent(req.user)
+    getContent(@GetUser() user: User){
+            return this.service.getContent(user)
         }
     
     @UseGuards(ContentGuard)
     @Get(':contentId')
-    getOneContent(@Request() req, @Param('contentId') contentId: number){
-        return this.service.getOneContent(req.user,contentId)
+    getOneContent(@GetUser() user: User, @Param('contentId') contentId: number){
+        return this.service.getOneContent(user,contentId)
     }
 
     @UseGuards(ContentGuard)
@@ -71,14 +73,14 @@ export class ContentController{
             }  
         })
     )
-    addFile(@UploadedFile() file: Express.Multer.File, @Request() req, @Param('contentId') contentId: number, @Body() dto: CreateContentDto){
-        return this.service.addFile(file,contentId,dto,req.user)
+    addFile(@UploadedFile() file: Express.Multer.File, @GetUser() user: User, @Param('contentId') contentId: number, @Body() dto: CreateContentDto){
+        return this.service.addFile(file,contentId,dto,user)
     }
 
     @UseGuards(ContentGuard)
     @Delete(':contentId')
-    deleteContent( @Param('contentId')contentId: number, @Request() req){
-        return this.service.deleteContent(contentId,req.user)
+    deleteContent( @Param('contentId')contentId: number, @GetUser() user: User){
+        return this.service.deleteContent(contentId,user)
     }
 
     @UseGuards(ContentGuard)

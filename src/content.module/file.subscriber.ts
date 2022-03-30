@@ -53,15 +53,15 @@ export class FileSubscriber implements EntitySubscriberInterface<File>{
         const cloud = new S3Client( 
             {
                 credentials:{
-                    accessKeyId:'Zad2m_UvQiDT3axixWFS',
-                    secretAccessKey:'eaCcBsVcXL-JmbM90Ww7McDePmhTzSugKMomf_nN'
+                    accessKeyId:process.env.ACCESS_KEY,
+                    secretAccessKey:process.env.SECRET_KEY
                 },
                 region:'ru-central1',
                 endpoint:'https://storage.yandexcloud.net'
             }
         )
         const params = {
-            Bucket: 'cmsapipurrwebintern',
+            Bucket: process.env.S3_BUCKET,
             Key: event.entity.key
         }
         try{
