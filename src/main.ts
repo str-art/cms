@@ -1,9 +1,11 @@
+import 'dotenv/config';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { auth, ConfigParams } from 'express-openid-connect'
+import { auth } from 'express-openid-connect'
 import { configAuth0 } from './auth0config';
+
 
 
 const PORT = process.env.port || 3000;

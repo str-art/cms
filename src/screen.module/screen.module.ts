@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { requiresAuth } from "express-openid-connect";
 import { AuthModule } from "src/auth.module/auth.module";

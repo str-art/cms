@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, Patch, Post, Request, UseGuards, UseInterceptors } from "@nestjs/common";
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { requiresAuth } from "express-openid-connect";
+import {Controller, Delete, Get,  Request, UseGuards} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/auth.module/guards/auth.guard";
-import { ResponseUser, UpdateUserDto } from "./user.dto/update.user.dto";
+import { GetUser } from "src/decorators/user.decorator";
 import { User } from "./user.entity";
 import { UserService } from "./user.service";
 
@@ -14,12 +13,12 @@ export class UserController{
 
     
     @Get()
-    getUser(@Request()req ):User{
-        return req.user;
+    getUser(@GetUser() user: User ):User{
+        return user;
     }
 
     @Delete()
-    async deleteUser(@Request()req ){  
-        return await this.userService.deleteUser(req.user)
+    async deleteUser(@GetUser() user: User ){  
+        return await this.userService.deleteUser(user)
     }
 }

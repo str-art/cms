@@ -1,15 +1,13 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Request, Response, StreamableFile, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Crud, CrudAuth, CrudController } from "@nestjsx/crud";
-import { Content } from "./content.entity";
 import { ContentService } from "./content.service";
 import { AuthGuard } from "src/auth.module/guards/auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateContentDto } from "./dto/create.content.dto";
-import { createReadStream } from "fs";
 import { ContentGuard } from "src/auth.module/guards/content.guard";
-import { GetObjectCommandOutput, GetObjectOutput } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
+import { User } from "src/user.module/user.entity";
+import { GetUser } from "src/decorators/user.decorator";
 
 
 @ApiTags('Working with content base')
@@ -25,7 +23,7 @@ export class ContentController{
             'file',
             {
                 fileFilter: (req,file,cb)=>{
-                if(file && file.mimetype == 'text/html' || 'image/jpeg' || "image/png" || 'video/mp4' ){
+                if(file && (file.mimetype.includes('video')|| file.mimetype.includes('image')||file.mimetype.includes('html'))){
                     cb(null,true)
                 }else{
                     cb(new HttpException({
@@ -36,20 +34,20 @@ export class ContentController{
             }
         )
     )
-    addContent(@UploadedFile()file: Express.Multer.File, @Request() req, @Body() dto: CreateContentDto){
-        return this.service.createContent(file,req.user, dto)
+    addContent(@UploadedFile()file: Express.Multer.File, @GetUser() user: User, @Body() dto: CreateContentDto){
+        return this.service.createContent(file,user, dto)
         
     }
 
     @Get()
-    getContent( @Request() req){
-            return this.service.getContent(req.user)
+    getContent(@GetUser() user: User){
+            return this.service.getContent(user)
         }
     
     @UseGuards(ContentGuard)
     @Get(':contentId')
-    getOneContent(@Request() req, @Param('contentId') contentId: number){
-        return this.service.getOneContent(req.user,contentId)
+    getOneContent(@GetUser() user: User, @Param('contentId') contentId: number){
+        return this.service.getOneContent(user,contentId)
     }
 
     @UseGuards(ContentGuard)
@@ -64,7 +62,7 @@ export class ContentController{
     @UseInterceptors(
         FileInterceptor('file',{
             fileFilter: (req,file,cb)=>{
-                if(file.mimetype == 'text/html' || 'image/jpeg' || "image/png" || 'video/mp4' ){
+                if(file && (file.mimetype.includes('video')|| file.mimetype.includes('image')||file.mimetype.includes('html'))){
                     cb(null,true)
                 }else{
                     cb(new HttpException({
@@ -75,14 +73,14 @@ export class ContentController{
             }  
         })
     )
-    addFile(@UploadedFile() file: Express.Multer.File, @Request() req, @Param('contentId') contentId: number, @Body() dto: CreateContentDto){
-        return this.service.addFile(file,contentId,dto,req.user)
+    addFile(@UploadedFile() file: Express.Multer.File, @GetUser() user: User, @Param('contentId') contentId: number, @Body() dto: CreateContentDto){
+        return this.service.addFile(file,contentId,dto,user)
     }
 
     @UseGuards(ContentGuard)
     @Delete(':contentId')
-    deleteContent( @Param('contentId')contentId: number, @Request() req){
-        return this.service.deleteContent(contentId,req.user)
+    deleteContent( @Param('contentId')contentId: number, @GetUser() user: User){
+        return this.service.deleteContent(contentId,user)
     }
 
     @UseGuards(ContentGuard)

@@ -8,9 +8,9 @@ export class StorageService{
 
   
 
-    async uploadFile(file, path, fileName){
+    async uploadFile(file: Buffer, path:number, fileName:number){
         const params = {
-            Bucket: 'cmsapipurrwebintern',
+            Bucket: process.env.S3_BUCKET,
             Key: `${path}/${fileName}`,
             Body: file 
 
@@ -24,9 +24,9 @@ export class StorageService{
         
     }
 
-    async download(key){
+    async download(key:string){
         const params = {
-            Bucket: 'cmsapipurrwebintern',
+            Bucket: process.env.S3_BUCKET,
             Key: key
         }
         try{
@@ -37,9 +37,9 @@ export class StorageService{
         }
     }
     
-    async deleteFile(key){
+    async deleteFile(key:string){
         const params = {
-            Bucket: 'cmsapipurrwebintern',
+            Bucket: process.env.S3_BUCKET,
             Key: key
 
         }
